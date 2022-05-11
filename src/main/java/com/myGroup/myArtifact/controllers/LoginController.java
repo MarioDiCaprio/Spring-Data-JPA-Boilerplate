@@ -6,6 +6,7 @@ import com.myGroup.myArtifact.controllers.response.LoginResponse;
 import com.myGroup.myArtifact.entities.User;
 import com.myGroup.myArtifact.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -19,6 +20,9 @@ public class LoginController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /////////////////////////////////////////////////////////
 
@@ -37,8 +41,8 @@ public class LoginController {
     public LoginResponse login(@RequestBody LoginRequest request) {
         String username = request.getUsername();
         String password = request.getPassword();
-        User user = userRepository.findByUsernameAndPassword(username, password).orElse(null);
-        boolean valid = user != null;
+        User user = userRepository.findByUsername(username).orElse(null);
+        boolean valid = (user != null) && passwordEncoder.matches(password, user.getPassword());
         return new LoginResponse(username, password, valid);
     }
 

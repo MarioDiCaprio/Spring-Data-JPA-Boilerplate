@@ -6,6 +6,7 @@ import com.myGroup.myArtifact.controllers.response.RegisterResponse;
 import com.myGroup.myArtifact.entities.User;
 import com.myGroup.myArtifact.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -19,6 +20,9 @@ public class RegisterController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     //////////////////////////////////////////////////////////////
 
@@ -43,7 +47,7 @@ public class RegisterController {
         if (doesUsernameExist)
             return new RegisterResponse(username, email, password, false);
         // save new user to database
-        User user = new User(username, email, password);
+        User user = new User(username, email, passwordEncoder.encode(password));
         userRepository.save(user);
         // return response
         return new RegisterResponse(username, email, password, true);

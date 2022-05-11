@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +41,9 @@ public class HttpRequestTests {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     /////////////////////////////////////////////////////////////////
 
     String url(String url) {
@@ -65,12 +69,20 @@ public class HttpRequestTests {
     }
 
     /**
+     * Ensures the {@link PasswordEncoder} was initialized.
+     */
+    @Test
+    void passwordEncoderNotNull() {
+        assertThat(passwordEncoder).isNotNull();
+    }
+
+    /**
      * Tests the endpoint {@code /login}.
      */
     @Test
     void login() {
         // create user first
-        User user = new User("Hello", "helloworld@gmail.com", "World");
+        User user = new User("Hello", "helloworld@gmail.com", passwordEncoder.encode("World"));
         userRepository.save(user);
 
         // send valid login request
@@ -107,6 +119,11 @@ public class HttpRequestTests {
 
         // assert failed, because username already exists
         assertThat(register.isValid()).isFalse();
+
+        // assert password was encoded successfully
+        User user = userRepository.findByUsername("Hello").orElse(null);
+        assertThat(user).isNotNull();
+        assertThat(user.getPassword()).isNotEqualTo("World");
     }
 
     /**

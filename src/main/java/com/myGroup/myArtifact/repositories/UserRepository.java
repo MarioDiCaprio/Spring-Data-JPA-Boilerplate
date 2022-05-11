@@ -26,15 +26,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     Optional<User> findByUsername(String username);
 
     /**
-     * Finds a user by their username and their password. This is
-     * useful for checking login validity.
-     * @param username The user's username
-     * @param password The user's password
-     * @return The potential user
-     */
-    Optional<User> findByUsernameAndPassword(String username, String password);
-
-    /**
      * Finds users by a given email.
      * @param email The email to search users for
      * @return A list of all users with the given email

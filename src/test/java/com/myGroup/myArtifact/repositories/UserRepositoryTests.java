@@ -74,19 +74,6 @@ public class UserRepositoryTests {
     }
 
     /**
-     * Tests the {@code UserRepository#findByUsernameAndPassword()} method.
-     */
-    @Test
-    void findByUsernameAndPassword() {
-        // create user first
-        User user = new User("Hello", "helloworld@gmail.com", "World");
-        userRepository.save(user);
-        // assert user can be found successfully
-        User tmp = userRepository.findByUsernameAndPassword(user.getUsername(), user.getPassword()).orElse(null);
-        assertThat(tmp).isNotNull();
-    }
-
-    /**
      * Tests the {@code UserRepository#findByEmail()} method.
      */
     @Test
