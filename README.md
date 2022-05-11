@@ -4,7 +4,9 @@ be used as backend for applications that adhere to the REST Api. It comes with t
 following features:
 
 - A relational Database that is worked with using *Spring Data Jpa*
+    - A basic entity `User`
 - REST endpoints managed by Spring Controllers
+    - Basic login and registration system
 - Automated tests
 - Thorough documentation
 
